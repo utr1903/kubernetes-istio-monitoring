@@ -1,0 +1,38 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ .Values.name }}
+  labels:
+    app: opentelemetry-collector
+data:
+  config: |
+    receivers:
+      opencensus:
+        endpoint: 0.0.0.0:55678
+    processors:
+      memory_limiter:
+        limit_mib: 100
+        spike_limit_mib: 10
+        check_interval: 5s
+    exporters:
+      logging:
+        loglevel: debug
+      otlp:
+        endpoint: {{ .Values.newrelicOtlpEndpoint }}
+        headers:
+          api-key: {{ .Values.newrelicLicenseKey }}
+    extensions:
+      health_check:
+        port: 13133
+    service:
+      extensions:
+      - health_check
+      pipelines:
+        traces:
+          receivers:
+          - opencensus
+          processors:
+          - memory_limiter
+          exporters:
+          - logging
+          - otlp

@@ -1,0 +1,10 @@
+### Variables
+
+# Name
+name: "otelcollector"
+
+# New Relic OTLP endpoint
+newrelicOtlpEndpoint: "https://otlp.eu01.nr-data.net:4317"
+
+# New Relic license key
+newrelicLicenseKey: ""

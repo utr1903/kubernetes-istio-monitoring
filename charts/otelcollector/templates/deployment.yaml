@@ -1,0 +1,45 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Values.name }}
+  labels:
+    app: opentelemetry-collector
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: opentelemetry-collector
+  template:
+    metadata:
+      labels:
+        app: opentelemetry-collector
+    spec:
+      containers:
+        - name: opentelemetry-collector
+          image: "otel/opentelemetry-collector:0.49.0"
+          imagePullPolicy: IfNotPresent
+          command:
+            - "/otelcol"
+            - "--config=/conf/config.yaml"
+          ports:
+            - name: grpc-opencensus
+              containerPort: 55678
+              protocol: TCP
+          volumeMounts:
+            - name: opentelemetry-collector-config
+              mountPath: /conf
+          readinessProbe:
+            httpGet:
+              path: /
+              port: 13133
+          resources:
+            requests:
+              cpu: 40m
+              memory: 100Mi
+      volumes:
+        - name: opentelemetry-collector-config
+          configMap:
+            name: {{ .Values.name }}
+            items:
+              - key: config
+                path: config.yaml
