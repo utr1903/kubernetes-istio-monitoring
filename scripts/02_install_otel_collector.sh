@@ -4,6 +4,7 @@ name="otelcollector"
 namespace="otel"
 newrelicOtlpEndpoint="https://otlp.eu01.nr-data.net:4317"
 
+kubectl create namespace $namespace
 kubectl apply -f - <<EOF
 apiVersion: v1
 kind: ConfigMap
