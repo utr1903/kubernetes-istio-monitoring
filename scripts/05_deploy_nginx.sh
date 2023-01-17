@@ -10,7 +10,7 @@ metadata:
   labels:
     app: nginx
 spec:
-  replicas: 3
+  replicas: 1
   selector:
     matchLabels:
       app: nginx
@@ -19,7 +19,6 @@ spec:
       labels:
         app: nginx
         sidecar.istio.io/inject: "true"
-        istio.io/rev: "canary"
     spec:
       containers:
       - name: nginx
